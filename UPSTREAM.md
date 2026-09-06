@@ -47,9 +47,25 @@ These are the only differences `check-upstream.sh` tolerates:
 Every file we have changed or added inside `contracts/`. Keep this list exhaustive — it is
 the evidence that upstream settlement is preserved.
 
-| File | Status |
-|---|---|
-| _(none yet)_ | Milestone 1 made no edits to upstream code. |
+| Path | Status | Why |
+|---|---|---|
+| `contracts/script/bastion/SmokeSwapLocal.s.sol` | **added** | Milestone 1 increment 3 local-anvil smoke test. Calls only — no upstream file changed. |
+
+No upstream file has been **modified** yet. `AquaOpcodes.sol` and every instruction are
+still byte-identical to the pin; `make check-upstream` proves it and prints anything new.
+
+### Known forge issue this repo works around
+
+`forge script` 1.0.0-stable aborts with `Failed to decode constructor arguments` /
+`ABI decoding failed: buffer overrun while deserializing` when the script deploys
+`AquaSwapVMRouter`. The whole broadcast is dropped — the script reports
+"Script ran successfully" while the chain stays at block 0, so it fails silently.
+
+`forge create` deploys the same contract fine. `scripts/anvil-smoke.sh` therefore does
+every deployment with `forge create` and leaves `SmokeSwapLocal.s.sol` to do calls only.
+Root cause not established; the observed constructor-args blob is short by 66 bytes,
+which is consistent with forge slicing against the wrong artifact's creation bytecode
+(`AquaSwapVMRouterDebug` also exists). Treat that as a hypothesis, not a finding.
 
 ## DODO reference file checksums
 

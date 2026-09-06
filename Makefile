@@ -44,6 +44,17 @@ check-upstream:
 anvil:
 	anvil --host 127.0.0.1 --port 8545 --chain-id 31337
 
+## smoke: deploy local fixtures on anvil and run one real Aqua-settled swap
+smoke:
+	./scripts/anvil-smoke.sh
+
+## boundary: dock the strategy, replay Bob's calldata, expect a real reverted tx
+boundary:
+	./scripts/anvil-boundary.sh
+
+## demo: smoke + boundary back to back (needs `make anvil` running elsewhere)
+demo: smoke boundary
+
 ## clean: drop build output (keeps node_modules)
 clean:
 	cd contracts && forge clean
@@ -54,4 +65,4 @@ help:
 	@echo "Bastion targets:"
 	@grep -E '^## ' $(MAKEFILE_LIST) | sed 's/^## /  /'
 
-.PHONY: setup build test test-fast test-aqua test-all check-upstream anvil clean help
+.PHONY: setup build test test-fast test-aqua test-all check-upstream anvil smoke boundary demo clean help

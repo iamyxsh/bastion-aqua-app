@@ -13,3 +13,6 @@ Milestones.MD
 node_modules/
 reference/dodo/out/
 reference/dodo/cache/
+
+# Our own anvil runs: keep run-latest.json as evidence, drop the timestamped copies.
+contracts/broadcast/SmokeSwapLocal.s.sol/*/run-[0-9]*.json
