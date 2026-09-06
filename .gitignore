@@ -1,0 +1,6 @@
+Agents.MD
+Milestones.MD
+
+.env
+.env.*
+!.env.example
