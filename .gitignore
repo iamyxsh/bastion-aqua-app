@@ -5,3 +5,11 @@ Milestones.MD
 .env
 .env.*
 !.env.example
+
+# Build output.
+# contracts/ and aqua/ carry their own upstream .gitignore for out/cache/artifacts/
+# node_modules, so do NOT blanket-ignore here: contracts/broadcast/ holds 43
+# upstream-committed deployment records that are part of the pinned tree.
+node_modules/
+reference/dodo/out/
+reference/dodo/cache/

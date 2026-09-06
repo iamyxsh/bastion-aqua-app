@@ -1,0 +1,57 @@
+# Bastion — top-level commands.
+# `make help` lists everything. Sub-projects keep their own upstream tooling;
+# these targets just call it so you never have to remember which is which.
+
+SHELL := /bin/bash
+.DEFAULT_GOAL := help
+
+# contracts/ = SwapVM fork  (Hardhat 3 + Foundry-style .t.sol tests)
+# aqua/      = Aqua, unmodified (pure Foundry)
+# reference/dodo/ = DODO PMM oracle, unmodified (Foundry, solc 0.6.9)
+
+## setup: install node deps in both vendored trees (run once)
+setup:
+	cd contracts && yarn install --frozen-lockfile
+	cd aqua && yarn install --frozen-lockfile
+
+## build: compile all three trees
+build:
+	cd aqua && forge build
+	cd contracts && forge build
+	forge build --root reference/dodo
+
+## test: authoritative regression suite (upstream's own runner, 882 tests)
+test:
+	cd contracts && npx hardhat test solidity
+
+## test-fast: quick Foundry loop. Excludes 3 tests that fail only under forge
+## (see MILESTONES / UPSTREAM.md — runner artifact, they pass under hardhat).
+test-fast:
+	cd contracts && forge test --no-match-path 'test/TakerCallbackAquaNegative.t.sol'
+
+## test-aqua: Aqua's own suite (50 tests)
+test-aqua:
+	cd aqua && forge test
+
+## test-all: everything
+test-all: test-aqua test
+
+## check-upstream: prove aqua/ + DODO are unmodified and list the SwapVM fork surface
+check-upstream:
+	./scripts/check-upstream.sh
+
+## anvil: local chain on 127.0.0.1:8545, chainId 31337 (matches contracts/hardhat.config.ts)
+anvil:
+	anvil --host 127.0.0.1 --port 8545 --chain-id 31337
+
+## clean: drop build output (keeps node_modules)
+clean:
+	cd contracts && forge clean
+	cd aqua && forge clean
+	rm -rf reference/dodo/out reference/dodo/cache
+
+help:
+	@echo "Bastion targets:"
+	@grep -E '^## ' $(MAKEFILE_LIST) | sed 's/^## /  /'
+
+.PHONY: setup build test test-fast test-aqua test-all check-upstream anvil clean help

@@ -1,0 +1,11 @@
+# Independent compilation unit for the unmodified DODO PMM reference.
+# Kept OUT of contracts/ so the SwapVM fork diff stays minimal and so
+# `npx hardhat test solidity` (which declares only solc 0.8.30) keeps working.
+[profile.default]
+src = "lib"
+out = "out"
+libs = []
+test = "test"
+solc_version = "0.6.9"
+optimizer = true
+optimizer_runs = 200
