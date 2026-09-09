@@ -2,7 +2,7 @@
 # Kept OUT of contracts/ so the SwapVM fork diff stays minimal and so
 # `npx hardhat test solidity` (which declares only solc 0.8.30) keeps working.
 [profile.default]
-src = "lib"
+src = "src"
 out = "out"
 libs = []
 test = "test"

@@ -1,0 +1,152 @@
+forge build --root reference/dodo
+No files changed, compilation skipped
+FOUNDRY_GAS_LIMIT=9223372036854775807 forge test --root experiments/curves -vv
+No files changed, compilation skipped
+
+Ran 4 tests for test/CurveComparison.t.sol:CurveComparisonTest
+[PASS] test_CurveComparison() (gas: 952569841)
+Logs:
+  
+  --- TREND UP    2025-06-23..08-22  K = 10/100
+    hold                 USD 72437
+    XYK   constant prod  USD 68273
+    CLMM  Gamma +/-7.8%  USD 49119
+    PMM   daily anchor   USD 61890
+    vs hold, bps:  XYK -574
+                   CLMM -3219
+                   PMM  -1456
+    arb trades:    XYK 60
+                   CLMM 15
+                   PMM  60
+    arb volume USD XYK 24966
+                   CLMM 84134
+                   PMM  233747
+  
+  --- TREND DOWN  2025-01-15..03-16  K = 10/100
+    hold                 USD 53385
+    XYK   constant prod  USD 51041
+    CLMM  Gamma +/-7.8%  USD 38550
+    PMM   daily anchor   USD 43791
+    vs hold, bps:  XYK -439
+                   CLMM -2778
+                   PMM  -1797
+    arb trades:    XYK 60
+                   CLMM 16
+                   PMM  60
+    arb volume USD XYK 29355
+                   CLMM 136100
+                   PMM  314001
+  
+  --- CHOP        2025-03-24..05-23  K = 10/100
+    hold                 USD 46076
+    XYK   constant prod  USD 45861
+    CLMM  Gamma +/-7.8%  USD 42388
+    PMM   daily anchor   USD 37976
+    vs hold, bps:  XYK -46
+                   CLMM -800
+                   PMM  -1758
+    arb trades:    XYK 60
+                   CLMM 15
+                   PMM  60
+    arb volume USD XYK 18131
+                   CLMM 63200
+                   PMM  168101
+  
+  --- QUIET       2025-11-23..01-22  K = 10/100
+    hold                 USD 57548
+    XYK   constant prod  USD 57528
+    CLMM  Gamma +/-7.8%  USD 57072
+    PMM   daily anchor   USD 52650
+    vs hold, bps:  XYK -3
+                   CLMM -82
+                   PMM  -851
+    arb trades:    XYK 60
+                   CLMM 32
+                   PMM  60
+    arb volume USD XYK 17506
+                   CLMM 62524
+                   PMM  188019
+
+[PASS] test_FreshnessSweep() (gas: 2395361040)
+Logs:
+  
+  --- freshness sweep, TREND UP (bps vs holding, K=0.1)
+     XYK  (no oracle)  -574
+     CLMM (no oracle)  -3219
+     PMM anchor 0% fresh -1456
+     PMM anchor 50% fresh -524
+     PMM anchor 90% fresh -54
+     PMM anchor 99% fresh -3
+     PMM anchor 100% fresh 0
+  
+  --- freshness sweep, TREND DOWN (bps vs holding, K=0.1)
+     XYK  (no oracle)  -439
+     CLMM (no oracle)  -2778
+     PMM anchor 0% fresh -1797
+     PMM anchor 50% fresh -525
+     PMM anchor 90% fresh 6
+     PMM anchor 99% fresh 4
+     PMM anchor 100% fresh 0
+  
+  --- freshness sweep, CHOP (bps vs holding, K=0.1)
+     XYK  (no oracle)  -46
+     CLMM (no oracle)  -800
+     PMM anchor 0% fresh -1758
+     PMM anchor 50% fresh -548
+     PMM anchor 90% fresh -13
+     PMM anchor 99% fresh 1
+     PMM anchor 100% fresh 0
+  
+  --- freshness sweep, QUIET (bps vs holding, K=0.1)
+     XYK  (no oracle)  -3
+     CLMM (no oracle)  -82
+     PMM anchor 0% fresh -851
+     PMM anchor 50% fresh -277
+     PMM anchor 90% fresh -19
+     PMM anchor 99% fresh 0
+     PMM anchor 100% fresh 0
+
+[PASS] test_KSweep() (gas: 14078713904)
+Logs:
+  
+  --- K sweep, TREND UP (bps vs holding, 1-day stale anchor)
+     XYK  -574
+     CLMM -3219
+     PMM K=1/100 -3941
+     PMM K=10/100 -1456
+     PMM K=50/100 -404
+     PMM K=100/100 -213
+  
+  --- K sweep, TREND DOWN (bps vs holding, 1-day stale anchor)
+     XYK  -439
+     CLMM -2778
+     PMM K=1/100 -4200
+     PMM K=10/100 -1797
+     PMM K=50/100 -546
+     PMM K=100/100 -294
+  
+  --- K sweep, CHOP (bps vs holding, 1-day stale anchor)
+     XYK  -46
+     CLMM -800
+     PMM K=1/100 -3994
+     PMM K=10/100 -1758
+     PMM K=50/100 -563
+     PMM K=100/100 -307
+  
+  --- K sweep, QUIET (bps vs holding, 1-day stale anchor)
+     XYK  -3
+     CLMM -82
+     PMM K=1/100 -2607
+     PMM K=10/100 -851
+     PMM K=50/100 -225
+     PMM K=100/100 -117
+
+[PASS] test_SelfCheck_PmmAtK1_FrozenAnchor_IsConstantProduct() (gas: 65571379)
+Logs:
+  self-check  XYK USD 57528
+  self-check  PMM USD 57528
+  self-check  diff bps 0
+
+Suite result: ok. 4 passed; 0 failed; 0 skipped; finished in 7.93s (15.25s CPU time)
+
+Ran 1 test suite in 7.94s (7.93s CPU time): 4 tests passed, 0 failed, 0 skipped (4 total tests)

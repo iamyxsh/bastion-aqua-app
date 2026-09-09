@@ -1,0 +1,48 @@
+python3 -m unittest discover -s experiments/curves -p 'test_data.py' -v
+test_decimal_conversion_has_no_binary_float_rounding (test_data.CausalDataTest.test_decimal_conversion_has_no_binary_float_rounding) ... ok
+test_latest_observation_at_cutoff_and_no_future_price (test_data.CausalDataTest.test_latest_observation_at_cutoff_and_no_future_price) ... ok
+test_pinned_fixtures_match_dates_hashes_counts_and_causal_anchors (test_data.CausalDataTest.test_pinned_fixtures_match_dates_hashes_counts_and_causal_anchors) ... ok
+test_rejects_duplicate_or_reordered_trade_ids (test_data.CausalDataTest.test_rejects_duplicate_or_reordered_trade_ids) ... ok
+test_rejects_millisecond_timestamp (test_data.CausalDataTest.test_rejects_millisecond_timestamp) ... ok
+test_sampling_keeps_actual_direction_size_and_lagged_history (test_data.CausalDataTest.test_sampling_keeps_actual_direction_size_and_lagged_history) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.046s
+
+OK
+forge build --root reference/dodo
+No files changed, compilation skipped
+FOUNDRY_GAS_LIMIT=9223372036854775807 forge test --root experiments/curves --no-match-test 'test_CurveComparison|test_KSweep|test_FreshnessSweep' -vv
+No files changed, compilation skipped
+
+Ran 7 tests for test/MarketReplay.t.sol:MarketReplayTest
+[PASS] test_CustomerLimitRejectsWithoutCustomerBalanceChange() (gas: 26794)
+[PASS] test_FeeReinvestmentCanonicalAtEquilibriumCrossing() (gas: 43203)
+[PASS] test_FreshAnchorPreservesInventoryAndQuoteIsReadOnly() (gas: 62894)
+[PASS] test_PartialFillFeeAndBalancesReconcile() (gas: 25020)
+[PASS] test_RebalanceChargesCostsAndMovesBothDirections() (gas: 26865)
+[PASS] test_RejectsLookAheadAnchor() (gas: 39638)
+[SKIP: run with make curves-replay] test_RunReplay() (gas: 0)
+Suite result: ok. 6 passed; 0 failed; 1 skipped; finished in 7.08ms (3.53ms CPU time)
+
+Ran 3 tests for test/CurveComparison.t.sol:CurveComparisonTest
+[PASS] test_Clmm_OneSidedPositionCanTradeBackIntoRange() (gas: 1253293)
+[PASS] test_Clmm_PartialFillOnlyCreditsConsumedInput() (gas: 24476)
+[PASS] test_SelfCheck_PmmAtK1_FrozenAnchor_IsConstantProduct() (gas: 1336752703)
+Logs:
+  self-check  XYK USD 68273
+  self-check  PMM USD 68273
+  self-check  diff bps 0
+  self-check  XYK USD 51041
+  self-check  PMM USD 51041
+  self-check  diff bps 0
+  self-check  XYK USD 45861
+  self-check  PMM USD 45861
+  self-check  diff bps 0
+  self-check  XYK USD 57528
+  self-check  PMM USD 57528
+  self-check  diff bps 0
+
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 751.74ms (750.22ms CPU time)
+
+Ran 2 test suites in 755.82ms (758.82ms CPU time): 9 tests passed, 0 failed, 1 skipped (10 total tests)

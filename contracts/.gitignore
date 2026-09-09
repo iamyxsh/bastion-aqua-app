@@ -13,4 +13,3 @@ build
 !.env.example
 venv/
 .yarn
-broadcast/

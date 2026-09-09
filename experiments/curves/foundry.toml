@@ -1,0 +1,32 @@
+# Bastion — curve comparison experiment.
+#
+# Deliberately its OWN Foundry project, outside contracts/, for two reasons:
+#   1. contracts/ is driven by Hardhat 3 (`make test`, 882 tests). A test in there that
+#      loads a cross-project artifact via vm.getCode fails under Hardhat's resolver and
+#      would turn our authoritative regression suite red.
+#   2. It keeps the SwapVM fork surface to the smoke script alone.
+#
+# It reads upstream SwapVM sources and the independently compiled DODO reference, and
+# modifies neither.
+[profile.default]
+src = "src"
+test = "test"
+out = "out"
+libs = []
+allow_paths = ["../../contracts", "../../reference"]
+solc_version = "0.8.30"
+optimizer = true
+optimizer_runs = 700
+via_ir = true
+fs_permissions = [
+    { access = "read", path = "../../reference/dodo/out" },
+    { access = "read", path = "./data" },
+    { access = "read", path = "./replay.json" }
+]
+remappings = [
+    "forge-std/=../../contracts/node_modules/forge-std/src/",
+    "@openzeppelin/contracts/=../../contracts/node_modules/@openzeppelin/contracts/",
+    "@1inch/solidity-utils/=../../contracts/node_modules/@1inch/solidity-utils/",
+    "@1inch/aqua/=../../contracts/node_modules/@1inch/aqua/",
+    "swap-vm/=../../contracts/src/",
+]

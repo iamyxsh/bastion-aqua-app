@@ -55,14 +55,35 @@ boundary:
 ## demo: smoke + boundary back to back (needs `make anvil` running elsewhere)
 demo: smoke boundary
 
+## curves: the PMM vs XYK vs CLMM premise check (real ETH prices, real Gamma band)
+curves:
+	forge build --root reference/dodo
+	FOUNDRY_GAS_LIMIT=9223372036854775807 forge test --root experiments/curves -vv
+
+## curves-data: download and checksum seven pinned days of ETHUSDT aggregate trades
+curves-data:
+	python3 scripts/fetch-curve-data.py
+
+## curves-check: offline data and curve boundary tests (market replay is separately invoked)
+curves-check:
+	python3 -m unittest discover -s experiments/curves -p 'test_data.py' -v
+	forge build --root reference/dodo
+	FOUNDRY_GAS_LIMIT=9223372036854775807 forge test --root experiments/curves --no-match-test 'test_CurveComparison|test_KSweep|test_FreshnessSweep' -vv
+
+## curves-replay: train on two days, evaluate five untouched days, write numeric report
+curves-replay:
+	forge build --root reference/dodo
+	forge build --root experiments/curves
+	python3 scripts/run-curve-replay.py
+
 ## clean: drop build output (keeps node_modules)
 clean:
 	cd contracts && forge clean
 	cd aqua && forge clean
-	rm -rf reference/dodo/out reference/dodo/cache
+	rm -rf reference/dodo/out reference/dodo/cache experiments/curves/out experiments/curves/cache
 
 help:
 	@echo "Bastion targets:"
 	@grep -E '^## ' $(MAKEFILE_LIST) | sed 's/^## /  /'
 
-.PHONY: setup build test test-fast test-aqua test-all check-upstream anvil smoke boundary demo clean help
+.PHONY: setup build test test-fast test-aqua test-all check-upstream anvil smoke boundary demo curves curves-data curves-check curves-replay clean help

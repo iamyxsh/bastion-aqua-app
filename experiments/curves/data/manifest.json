@@ -1,0 +1,140 @@
+{
+  "schema": "11 uint256 words/event, big endian; prices and quantities 1e18",
+  "config_sha256": "146413b5d738b45324334a505d8a740c6086e532fff996b56c7cc71b40e34f5a",
+  "source": "https://github.com/binance/binance-public-data",
+  "days": [
+    {
+      "date": "2026-09-01",
+      "phase": "training",
+      "url": "https://data.binance.vision/data/spot/daily/aggTrades/ETHUSDT/ETHUSDT-aggTrades-2026-09-01.zip",
+      "archive_sha256": "a703b8a0aa9df00dcedb9dfaed57b20eede0f17c5ccf1b281883d17d98a5d050",
+      "fixture": "2026-09-01.bin",
+      "fixture_sha256": "eae66421849275d7b6d19679c6bfcdb9bd613e3c2ff922cda3b26c6c57186722",
+      "raw_trades": 720848,
+      "sampled_trades": 1440,
+      "buy_base_requests": 739,
+      "sell_base_requests": 701,
+      "first_time_us": 1788220831026192,
+      "last_time_us": 1788307140051748,
+      "max_anchor_age_us": {
+        "1": 11466311,
+        "5": 13006772,
+        "30": 37200579
+      }
+    },
+    {
+      "date": "2026-09-02",
+      "phase": "training",
+      "url": "https://data.binance.vision/data/spot/daily/aggTrades/ETHUSDT/ETHUSDT-aggTrades-2026-09-02.zip",
+      "archive_sha256": "99b6bd42db428d48cfb041eba0faa314e421ed7fdd4e895126594a63f4feb8de",
+      "fixture": "2026-09-02.bin",
+      "fixture_sha256": "f49b56c6f4b127f71b45f0a826727f2d02e873c47cd87ce951983087896ea1a7",
+      "raw_trades": 718966,
+      "sampled_trades": 1440,
+      "buy_base_requests": 785,
+      "sell_base_requests": 655,
+      "first_time_us": 1788307200120685,
+      "last_time_us": 1788393540005513,
+      "max_anchor_age_us": {
+        "1": 12099612,
+        "5": 13949118,
+        "30": 38361097
+      }
+    },
+    {
+      "date": "2026-09-03",
+      "phase": "evaluation",
+      "url": "https://data.binance.vision/data/spot/daily/aggTrades/ETHUSDT/ETHUSDT-aggTrades-2026-09-03.zip",
+      "archive_sha256": "8522f0360233df9083fca1222243a0b36d91ffa1b5b7f920e740f212dc32419a",
+      "fixture": "2026-09-03.bin",
+      "fixture_sha256": "f706a878e7830d34c8151fa7be1ffebd74c7e4f7bf32d1ead6a9d71f56a1322d",
+      "raw_trades": 921756,
+      "sampled_trades": 1440,
+      "buy_base_requests": 829,
+      "sell_base_requests": 611,
+      "first_time_us": 1788393600793574,
+      "last_time_us": 1788479942941146,
+      "max_anchor_age_us": {
+        "1": 9576935,
+        "5": 10674555,
+        "30": 38340830
+      }
+    },
+    {
+      "date": "2026-09-04",
+      "phase": "evaluation",
+      "url": "https://data.binance.vision/data/spot/daily/aggTrades/ETHUSDT/ETHUSDT-aggTrades-2026-09-04.zip",
+      "archive_sha256": "b05971b9b352d6aad31faa16ef45e66b1f8f4b7ef796d85a36c56b621cc49073",
+      "fixture": "2026-09-04.bin",
+      "fixture_sha256": "7a8e518a4b928ca9eb6ab28c7555a2dc6e935510fadb75be151b048821d47b1f",
+      "raw_trades": 863684,
+      "sampled_trades": 1440,
+      "buy_base_requests": 777,
+      "sell_base_requests": 663,
+      "first_time_us": 1788480000463826,
+      "last_time_us": 1788566341223538,
+      "max_anchor_age_us": {
+        "1": 7347158,
+        "5": 10089784,
+        "30": 35536459
+      }
+    },
+    {
+      "date": "2026-09-05",
+      "phase": "evaluation",
+      "url": "https://data.binance.vision/data/spot/daily/aggTrades/ETHUSDT/ETHUSDT-aggTrades-2026-09-05.zip",
+      "archive_sha256": "ec782c5c73f363686eeaaa40b23e071bbd099a7f5850cb4ff0f39ed9729c26d8",
+      "fixture": "2026-09-05.bin",
+      "fixture_sha256": "6c85180ff7074ecf29d1ffe03c64abdfddc8837dc50744a446f10298c63fe8a9",
+      "raw_trades": 283046,
+      "sampled_trades": 1440,
+      "buy_base_requests": 695,
+      "sell_base_requests": 745,
+      "first_time_us": 1788566400203398,
+      "last_time_us": 1788652742427160,
+      "max_anchor_age_us": {
+        "1": 8403611,
+        "5": 12911048,
+        "30": 37437291
+      }
+    },
+    {
+      "date": "2026-09-06",
+      "phase": "evaluation",
+      "url": "https://data.binance.vision/data/spot/daily/aggTrades/ETHUSDT/ETHUSDT-aggTrades-2026-09-06.zip",
+      "archive_sha256": "bc5963485e29e6ce356b0fb106a9a17f834354d19eccb871f722139e2c4f72dd",
+      "fixture": "2026-09-06.bin",
+      "fixture_sha256": "c270b1c5f69f59b9fe1962747ab348043c20db0248605de13df4a710db2c7d6e",
+      "raw_trades": 500550,
+      "sampled_trades": 1440,
+      "buy_base_requests": 696,
+      "sell_base_requests": 744,
+      "first_time_us": 1788652800019407,
+      "last_time_us": 1788739140021890,
+      "max_anchor_age_us": {
+        "1": 8739927,
+        "5": 11837972,
+        "30": 36873178
+      }
+    },
+    {
+      "date": "2026-09-07",
+      "phase": "evaluation",
+      "url": "https://data.binance.vision/data/spot/daily/aggTrades/ETHUSDT/ETHUSDT-aggTrades-2026-09-07.zip",
+      "archive_sha256": "de4e8614f0b66937e379a958f8d63be19d70a006aea4fda8aa8db3ecc2879d29",
+      "fixture": "2026-09-07.bin",
+      "fixture_sha256": "adf004f46d3c9f22da78639db699d647e544cf0d9d9fa93e704183d2b823be19",
+      "raw_trades": 652608,
+      "sampled_trades": 1440,
+      "buy_base_requests": 767,
+      "sell_base_requests": 673,
+      "first_time_us": 1788739200122126,
+      "last_time_us": 1788825540731554,
+      "max_anchor_age_us": {
+        "1": 7568284,
+        "5": 10435840,
+        "30": 38133148
+      }
+    }
+  ]
+}

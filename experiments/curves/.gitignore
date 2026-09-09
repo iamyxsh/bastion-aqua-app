@@ -1,0 +1,5 @@
+data/raw/
+__pycache__/
+
+# Regenerable per-run replay output; keep the aggregate reports and checks.
+/evidence/market-replay/cases/

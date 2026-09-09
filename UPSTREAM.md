@@ -51,6 +51,17 @@ the evidence that upstream settlement is preserved.
 |---|---|---|
 | `contracts/script/bastion/SmokeSwapLocal.s.sol` | **added** | Milestone 1 increment 3 local-anvil smoke test. Calls only — no upstream file changed. |
 
+The curve-comparison experiment lives in `experiments/curves/`, its own Foundry project,
+**not** in `contracts/test/`. A test in `contracts/` that loads a cross-project artifact
+via `vm.getCode` fails under Hardhat's resolver and turns `make test` red (882 passing +
+1 failing). Keeping it outside also keeps this table to one line.
+
+### Gotcha: Foundry edits upstream's `.gitignore`
+
+Running `forge script --broadcast` appends `broadcast/` to `contracts/.gitignore`. That
+silently un-tracks the 43 upstream deployment records **and** our own smoke-test evidence.
+`make check-upstream` catches it; revert the file to the pin when it does.
+
 No upstream file has been **modified** yet. `AquaOpcodes.sol` and every instruction are
 still byte-identical to the pin; `make check-upstream` proves it and prints anything new.
 
