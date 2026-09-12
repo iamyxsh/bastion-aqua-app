@@ -34,7 +34,7 @@ test-aqua:
 	cd aqua && forge test
 
 ## test-all: everything
-test-all: test-aqua test
+test-all: test-aqua test conformance
 
 ## check-upstream: prove aqua/ + DODO are unmodified and list the SwapVM fork surface
 check-upstream:
@@ -48,12 +48,21 @@ anvil:
 smoke:
 	./scripts/anvil-smoke.sh
 
+## bastion: deploy the Bastion desk on anvil; one fill on A moves book B's quote
+bastion:
+	./scripts/anvil-bastion.sh
+
 ## boundary: dock the strategy, replay Bob's calldata, expect a real reverted tx
 boundary:
 	./scripts/anvil-boundary.sh
 
 ## demo: smoke + boundary back to back (needs `make anvil` running elsewhere)
 demo: smoke boundary
+
+## conformance: gate P1 — the PMM port vs the independently compiled DODO reference
+conformance:
+	forge build --root reference/dodo
+	forge test --root conformance -vv
 
 ## curves: the PMM vs XYK vs CLMM premise check (real ETH prices, real Gamma band)
 curves:
@@ -80,10 +89,10 @@ curves-replay:
 clean:
 	cd contracts && forge clean
 	cd aqua && forge clean
-	rm -rf reference/dodo/out reference/dodo/cache experiments/curves/out experiments/curves/cache
+	rm -rf reference/dodo/out reference/dodo/cache experiments/curves/out experiments/curves/cache conformance/out conformance/cache
 
 help:
 	@echo "Bastion targets:"
 	@grep -E '^## ' $(MAKEFILE_LIST) | sed 's/^## /  /'
 
-.PHONY: setup build test test-fast test-aqua test-all check-upstream anvil smoke boundary demo curves curves-data curves-check curves-replay clean help
+.PHONY: setup build test test-fast test-aqua test-all check-upstream conformance anvil smoke bastion boundary demo curves curves-data curves-check curves-replay clean help

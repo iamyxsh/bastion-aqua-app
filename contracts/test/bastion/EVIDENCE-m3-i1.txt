@@ -1,0 +1,38 @@
+# Bastion milestone 3 increment 1 evidence
+# Date: 2026-09-10T06:58:54Z
+# forge: forge Version: 1.0.0-stable
+
+## Runtime sizes (EIP-170 limit 24,576 B)
+| AquaSwapVMRouter                | 20,376           | 21,864            | 4,200              | 27,288              |
+| BastionAquaSwapVMRouter         | 23,540           | 25,028            | 1,036              | 24,124              |
+| DeskAdmin                       | 3,698            | 3,730             | 20,878             | 45,422              |
+| PMMMath                         | 2,816            | 2,846             | 21,760             | 46,306              |
+
+## Bastion tests (Hardhat-runnable, part of make test = 907)
+[PASS] test_AdmitBook_IsScopedToTheCaller() (gas: 285905)
+[PASS] test_AdmitBook_RejectsUnknownGroupAndDoubleAdmission() (gas: 287591)
+[PASS] test_AnchorDigestIsBoundToThisRouter() (gas: 5171956)
+[PASS] test_InitRiskGroup_CannotBeReopened() (gas: 254721)
+[PASS] test_InitRiskGroup_OpensAtTarget() (gas: 260134)
+[PASS] test_InitRiskGroup_Rejects() (gas: 44515)
+[PASS] test_PostAnchor_IsPermissionlessButSignatureBound() (gas: 324990)
+[PASS] test_PostAnchor_RecentresOnceAndLeavesACanonicalState() (gas: 347938)
+[PASS] test_PostAnchor_RejectsFutureAndExpired() (gas: 286007)
+[PASS] test_PostAnchor_RejectsReplayAndRegressingNonce() (gas: 349663)
+[PASS] test_PostAnchor_RejectsWrongPolicyVersion() (gas: 265428)
+[PASS] test_PostAnchor_RejectsWrongSigner() (gas: 266621)
+[PASS] test_RiskGroupsAreScopedToTheirMaker() (gas: 486498)
+[PASS] test_UnadmittedBookMapsToNothing() (gas: 8683)
+Suite result: ok. 14 passed; 0 failed; 0 skipped; finished in 2.87ms (3.98ms CPU time)
+[PASS] test_BastionOpcodeSlots() (gas: 1053)
+[PASS] test_ExactOutReverts() (gas: 492495)
+[PASS] test_MissingAnchorReverts() (gas: 426212)
+[PASS] test_ResaltedCopyIsNotAdmitted() (gas: 609083)
+[PASS] test_RouterQuoteEqualsTheLibrary() (gas: 590047)
+[PASS] test_SiblingBooksQuoteFromOneState() (gas: 656716)
+[PASS] test_StaleAnchorReverts() (gas: 549471)
+[PASS] test_StaticQuoteWritesNothing() (gas: 592269)
+[PASS] test_UnadmittedBookReverts() (gas: 464901)
+[PASS] test_UpstreamProgramsStillRun() (gas: 161672)
+[PASS] test_WrongPairReverts() (gas: 655340)
+Suite result: ok. 11 passed; 0 failed; 0 skipped; finished in 2.87ms (8.33ms CPU time)

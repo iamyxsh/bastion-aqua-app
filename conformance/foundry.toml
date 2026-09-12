@@ -1,0 +1,32 @@
+# Bastion — PMM conformance (gate P1).
+#
+# Deliberately its OWN Foundry project, outside contracts/, for the reason recorded in
+# UPSTREAM.md and proved at Entry 3: contracts/ is driven by Hardhat 3 (`make test`, the
+# authoritative 882-test regression), and a test in there that loads a cross-project
+# artifact via vm.getCode fails under Hardhat's resolver and turns that suite red.
+#
+# It reads two things and modifies neither:
+#   ../contracts/src/bastion/pmm/{PMMMath,Scale}.sol   our 0.8.30 port (compiled here)
+#   ../reference/dodo/out/PMMHarness.sol/...   DODO's 0.6.9 original (loaded as bytecode)
+#
+# Compiler settings match contracts/foundry.toml so the port is tested as it will ship.
+[profile.default]
+src = "src"
+test = "test"
+out = "out"
+libs = []
+allow_paths = ["../contracts", "../reference"]
+solc_version = "0.8.30"
+optimizer = true
+optimizer_runs = 700
+via_ir = true
+fs_permissions = [
+    { access = "read", path = "../reference/dodo/out" }
+]
+remappings = [
+    "forge-std/=../contracts/node_modules/forge-std/src/",
+    "bastion/=../contracts/src/bastion/",
+]
+
+[fuzz]
+runs = 1024

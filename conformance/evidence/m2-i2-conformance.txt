@@ -1,0 +1,119 @@
+# Bastion gate P1 + P2(exact-in) — milestone 2 increment 2 evidence
+# Command: make conformance
+# Date: 2026-09-10T04:57:42Z
+# forge: forge Version: 1.0.0-stable
+# port: contracts/src/bastion/pmm/{PMMMath,Scale}.sol (solc 0.8.30, optimizer 700, via-IR)
+# reference: reference/dodo/lib/* at pin 2f1bcdac, solc 0.6.9, optimizer 200, via vm.getCode
+
+forge build --root reference/dodo
+No files changed, compilation skipped
+forge test --root conformance -vv
+No files changed, compilation skipped
+
+Ran 40 tests for test/PMMConformance.t.sol:PMMConformanceTest
+[PASS] testFuzz_AdjustTarget_AllStates(uint256,uint256,uint256,uint256) (runs: 1034, μ: 136509, ~: 143402)
+[PASS] testFuzz_CanonicalAbove(uint256,uint256,uint256,uint256,uint256) (runs: 1034, μ: 147728, ~: 156604)
+[PASS] testFuzz_CanonicalBelow(uint256,uint256,uint256,uint256,uint256) (runs: 1038, μ: 144890, ~: 137199)
+[PASS] testFuzz_CrossingBoundary(uint256,uint256,uint256,uint256) (runs: 1032, μ: 101322, ~: 104959)
+[PASS] testFuzz_MidPrice_AllStates(uint256,uint256,uint256,uint256) (runs: 1034, μ: 99932, ~: 106714)
+[PASS] testFuzz_P2_KZero_IsExactlyFloored(uint256,uint256,uint256) (runs: 1042, μ: 22542, ~: 22322)
+[PASS] testFuzz_P2_Monotonic(uint256,uint256,uint256,uint256,uint256) (runs: 1037, μ: 93850, ~: 96732)
+[PASS] testFuzz_P2_OutputBoundedByReserve(uint256,uint256,uint256,uint256) (runs: 1036, μ: 54268, ~: 55869)
+[PASS] testFuzz_P2_SellBase_DeviationInSafeBand(uint256,uint256,uint256,uint256) (runs: 1042, μ: 55328, ~: 55769)
+[PASS] testFuzz_P2_SellQuote_DeviationInSafeBand(uint256,uint256,uint256,uint256) (runs: 1042, μ: 49861, ~: 49465)
+[PASS] testFuzz_Scale_RoundTripNeverRoundsUp(uint256,uint8,uint8) (runs: 1042, μ: 15321, ~: 15328)
+[PASS] testFuzz_SellBase_ROne(uint256,uint256,uint256,uint256) (runs: 1042, μ: 56388, ~: 58165)
+[PASS] testFuzz_SellBase_ROne_KOne(uint256,uint256,uint256) (runs: 1042, μ: 27229, ~: 27183)
+[PASS] testFuzz_SellBase_ROne_KZero(uint256,uint256,uint256) (runs: 1042, μ: 25408, ~: 25438)
+[PASS] testFuzz_SellQuote_ROne(uint256,uint256,uint256,uint256) (runs: 1042, μ: 51939, ~: 52880)
+[PASS] testFuzz_SellQuote_ROne_KOne(uint256,uint256,uint256) (runs: 1042, μ: 27627, ~: 27612)
+[PASS] testFuzz_SellQuote_ROne_KZero(uint256,uint256,uint256) (runs: 1042, μ: 26449, ~: 26483)
+[PASS] testFuzz_SyntheticAbove(uint256,uint256,uint256,uint256,uint256,uint256) (runs: 1042, μ: 116339, ~: 128927)
+[PASS] testFuzz_SyntheticBelow(uint256,uint256,uint256,uint256,uint256,uint256) (runs: 1042, μ: 117323, ~: 127527)
+[PASS] testFuzz_TradeSequence(uint256,uint256,uint256,uint256,uint256,uint256) (runs: 1034, μ: 275266, ~: 275878)
+[PASS] test_AdjustTarget_NoOpAtOne() (gas: 20490)
+[PASS] test_CornerCaseClamp() (gas: 28787)
+Logs:
+  clamped output (spare quote was 1 wei): 1
+
+[PASS] test_Crossing_SellBase_FromAbove() (gas: 121463)
+Logs:
+  Bound result 1000000000000000000000
+  sellBase from ABOVE_ONE, backToOnePayBase = 332191901292505845
+    one wei short -> out 999999999999998996770 R 1
+    exactly       -> out 1000000000000000000000 R 0
+    one wei over  -> out 1000000000000000003000 R 2
+
+[PASS] test_Crossing_SellQuote_FromBelow() (gas: 114427)
+Logs:
+  Bound result 3000000000000000000
+
+[PASS] test_DustPay() (gas: 75175)
+[PASS] test_GasPerCall() (gas: 112235)
+Logs:
+  Bound result 1000000000000000000000
+  gas sellQuote   (ABOVE_ONE, k=0.1): 20083
+  gas sellBase    (ABOVE_ONE, k=0.1): 17670
+  gas adjustTarget(ABOVE_ONE, k=0.1): 13696
+  gas midPrice    (ABOVE_ONE, k=0.1): 2092
+  gas sellQuote   (ONE, k=0.1):       15333
+
+[PASS] test_KZeroAndKOne_Fixed() (gas: 42612)
+[PASS] test_MidPrice_AtTargetEqualsAnchor() (gas: 21684)
+[PASS] test_OutsideDomain_BothRevert_ButRevertDataDiffers() (gas: 19737)
+Logs:
+  reference revert data:
+  0x08c379a0000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000094d554c5f4552524f520000000000000000000000000000000000000000000000
+  port revert data (Panic 0x11):
+  0x4e487b710000000000000000000000000000000000000000000000000000000000000011
+
+[PASS] test_P2_DeviationShrinksAwayFromKOne() (gas: 390522)
+Logs:
+    1-k = 1 deviation (wei) = 227272500000000000
+    1-k = 100 deviation (wei) = 2272725000000000
+    1-k = 100000 deviation (wei) = 2727250000000
+    1-k = 1000000000 deviation (wei) = 378286500
+    1-k = 1000000000000 deviation (wei) = 201512
+
+[PASS] test_P2_MeasuredDeviationInSafeBand() (gas: 446289)
+Logs:
+  P2 in-band, 256 deterministic samples, sellQuote:
+    worst overshoot (wei)             1
+    worst overshoot, relative x 1e18  0
+    worst undershoot (wei)            0
+
+[PASS] test_P2_NeverBetterThanAnchorAtTarget() (gas: 38300)
+[PASS] test_P2_NotMakerFavouring_TheViolation() (gas: 81050)
+Logs:
+  P2 violation, 1-k = 3 wei on a 1e12-wei book:
+    output returned by BOTH implementations: 196952839617351912
+    high-precision (1e6x) answer:            47574339617351912
+    overshoot, x1000 relative:               3139
+
+[PASS] test_P2_ZeroInZeroOut() (gas: 29040)
+[PASS] test_PayFarAboveTarget() (gas: 79170)
+[PASS] test_ReferenceRefusal_BothRevertIdentically() (gas: 37131)
+[PASS] test_Scale_OtherPairs() (gas: 9247)
+[PASS] test_Scale_Reverts() (gas: 11275)
+[PASS] test_Scale_WethUsdc() (gas: 90752)
+Logs:
+  fWETH/fUSDC anchor i = 3000000000 for human price 3000000000000000000000
+
+[PASS] test_WorkedExample_ROneSellQuote() (gas: 49916)
+Logs:
+  i   (quote per base, wad)  3000000000000000000000
+  k   (flatness, wad)        100000000000000000
+  B0 = B (base)              10000000000000000000
+  Q0 = Q (quote)             30000000000000000000000
+  gross in  (quote)          3000000000000000000000
+  fee 30bps (quote)          9000000000000000000
+  curve in  (quote)          2991000000000000000000
+  reference out (base)       986209759016173081
+  port      out (base)       986209759016173081
+  reference next R           1
+  port      next R           1
+  effective price, quote per base (wad) 3032823365065636003362
+
+Suite result: ok. 40 passed; 0 failed; 0 skipped; finished in 1.61s (8.24s CPU time)
+
+Ran 1 test suite in 1.62s (1.61s CPU time): 40 tests passed, 0 failed, 0 skipped (40 total tests)

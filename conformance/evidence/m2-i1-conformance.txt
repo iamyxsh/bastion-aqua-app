@@ -1,0 +1,48 @@
+# Bastion gate P1 — milestone 2 increment 1 evidence
+# Command: make conformance
+# Date: 2026-09-09T14:42:38Z
+# forge: forge Version: 1.0.0-stable
+# port: contracts/src/bastion/pmm/PMMMath.sol (solc 0.8.30, optimizer 700, via-IR)
+# reference: reference/dodo/lib/* at pin 2f1bcdac, solc 0.6.9, optimizer 200, loaded via vm.getCode
+
+forge build --root reference/dodo
+No files changed, compilation skipped
+forge test --root conformance -vv
+Compiling 2 files with Solc 0.8.30
+Solc 0.8.30 finished in 1.72s
+Compiler run successful!
+
+Ran 10 tests for test/PMMConformance.t.sol:PMMConformanceTest
+[PASS] testFuzz_ROneSellQuote(uint256,uint256,uint256,uint256) (runs: 1025, μ: 53805, ~: 55606)
+[PASS] testFuzz_ROneSellQuote_KOne(uint256,uint256,uint256) (runs: 1025, μ: 25073, ~: 25061)
+[PASS] testFuzz_ROneSellQuote_KZero(uint256,uint256,uint256) (runs: 1025, μ: 24062, ~: 24114)
+[PASS] test_DustPay() (gas: 40483)
+[PASS] test_KZeroAndKOne_Fixed() (gas: 24208)
+[PASS] test_OutsideDomain_BothRevert_ButRevertDataDiffers() (gas: 18972)
+Logs:
+  reference revert data:
+  0x08c379a0000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000094d554c5f4552524f520000000000000000000000000000000000000000000000
+  port revert data (Panic 0x11):
+  0x4e487b710000000000000000000000000000000000000000000000000000000000000011
+
+[PASS] test_PayFarAboveTarget() (gas: 57876)
+[PASS] test_UnportedEntryStates_Revert() (gas: 28455)
+[PASS] test_WorkedExample_ROneSellQuote() (gas: 80525)
+Logs:
+  i   (quote per base, wad)  3000000000000000000000
+  k   (flatness, wad)        100000000000000000
+  B0 = B (base)              10000000000000000000
+  Q0 = Q (quote)             30000000000000000000000
+  gross in  (quote)          3000000000000000000000
+  fee 30bps (quote)          9000000000000000000
+  curve in  (quote)          2991000000000000000000
+  reference out (base)       986209759016173081
+  port      out (base)       986209759016173081
+  reference next R           1
+  port      next R           1
+  effective price, quote per base (wad) 3032823365065636003362
+
+[PASS] test_ZeroPay() (gas: 18494)
+Suite result: ok. 10 passed; 0 failed; 0 skipped; finished in 167.22ms (289.44ms CPU time)
+
+Ran 1 test suite in 193.04ms (167.22ms CPU time): 10 tests passed, 0 failed, 0 skipped (10 total tests)

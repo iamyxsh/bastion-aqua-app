@@ -1,0 +1,99 @@
+# Bastion milestone 3 increment 2 — LOCAL ANVIL evidence
+# Date: 2026-09-10T16:01:10Z
+# Chain: local anvil, chain id 31337, port 8547. NOT a public network.
+# fWETH/fUSDC are mintable LOCAL FIXTURE MOCKS, not real WETH or USDC.
+# Keys are anvil's published test-mnemonic keys.
+
+==> deploying linked libraries (gate D1: the router does not fit without them)
+  PMMMath            0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e  0xedeae98751520c09cd0d351459f17b71fef9022abdcee5f494ded444d7b407d0
+  DeskAdmin          0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0  0x59229142251602404abb62d3f9ec36e1b439de16b3b5ff0287e8aa5badd80f32
+
+==> deploying the fixture world to http://127.0.0.1:8547
+  Aqua                       0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82  0x947c9f97770026df9409b1728c43c1e12bb8752c842dfee88ba5ad774040b0e9
+  BastionAquaSwapVMRouter    0x9A676e781A523b5d0C0e43731313A708CB607508  0xf21fb7d28ae88b639de463d088c2a6e508b9807cf13ef196f1a49c3a8b4b85d7
+  fWETH (18dp) LOCAL MOCK    0x0B306BF915C4d645ff596e518fAf3F9669b97016  0x37adbe882b03a15f807897ae03c752e71764562b0324ca45bf05b72dbe08d3a7
+  fUSDC (6dp)  LOCAL MOCK    0x959922bE3CAee4b8Cd9a407cc3ac1C251C2007B1  0x40a22b592ec8138735da9762a29f6c32a0b2ee924f0df4145812e55e50902364
+  MockTaker                  0x9A9f2CCfdE556A7E9Ff0848998Aa4a0CFD8863AE  0xd7b05f3b66cdebd82614e95a8cac2e310ba232265008d9c692480366c99c7b35
+
+==> deployed router runtime size on chain
+  23540 bytes (EIP-170 limit 24576)
+
+==> running BastionSmokeLocal
+Compiling 44 files with Solc 0.8.30
+Solc 0.8.30 finished in 17.48s
+Compiler run successful with warnings:
+Warning (2018): Function state mutability can be restricted to pure
+   --> script/bastion/BastionSmokeLocal.s.sol:252:5:
+    |
+252 |     function _quoteTraits(Env memory e, bool usdcIn) internal view returns (bytes memory) {
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to pure
+   --> script/bastion/BastionSmokeLocal.s.sol:257:5:
+    |
+257 |     function _swapTraits(Env memory e, bool usdcIn) internal view returns (bytes memory) {
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Script ran successfully.
+
+== Logs ==
+  
+  anchor priceWad (quote raw per base raw, 1e18) = 3000000000
+    human price 3,000 USDC per WETH at 6/18 decimals
+  shared ledger: fWETH 10000000000000000000  fUSDC 30000000000
+  
+  == BEFORE ==========================================
+    book B quote: 1,000 fUSDC in -> 331198832121712523 fWETH out
+  
+  == FILL ON BOOK A (real Aqua settlement) ===========
+    Bob paid   fUSDC = 3000000000
+    Bob got    fWETH = 986209759016174056
+  
+  == AFTER ===========================================
+    book B quote: 1,000 fUSDC in -> 323365127741376099 fWETH out
+    book B quote moved by          7833704380336424 fWETH
+    book B Aqua fWETH before/after 10000000000000000000 10000000000000000000
+    book B Aqua fUSDC before/after 100000000000 100000000000
+  
+    No transaction touched book B. Its own Aqua balances are identical.
+    Its quote changed because both books read ONE shared PMM state.
+  
+  == SHARED PMM STATE (one per maker risk group) =====
+    i (anchor wad) 3000000000
+    k             100000000000000000
+    B  fWETH      9013790240983825944
+    Q  fUSDC      33000000000
+    B0 fWETH      10002935665443767145
+    Q0 fUSDC      30000000000
+    R             1
+  
+  book A orderHash:
+  0xe8d8440ce7849f750a4441c5dbc5b2cd33778f03e7ffb1b085f1ba14757a9b71
+  book B orderHash:
+  0x7a4b22a69b44f7160262e06d67b36ac4ef3db2a8e44e6a89188ac5f310f8ce42
+
+## Setting up 1 EVM.
+
+==========================
+
+Chain 31337
+
+Estimated gas price: 0.084610695 gwei
+
+Estimated total gas used for script: 1577623
+
+Estimated amount required: 0.000133483778477985 ETH
+
+==========================
+
+
+==========================
+
+ONCHAIN EXECUTION COMPLETE & SUCCESSFUL.
+
+Transactions saved to: /Users/yashsharma/Personal/eth-online/bastion-aqua-app/contracts/broadcast/BastionSmokeLocal.s.sol/31337/run-latest.json
+
+Sensitive values saved to: /Users/yashsharma/Personal/eth-online/bastion-aqua-app/contracts/cache/BastionSmokeLocal.s.sol/31337/run-latest.json
+
+
+==> broadcast receipts: contracts/broadcast/BastionSmokeLocal.s.sol/31337/run-latest.json

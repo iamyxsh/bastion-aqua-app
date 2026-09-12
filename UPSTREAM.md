@@ -50,11 +50,55 @@ the evidence that upstream settlement is preserved.
 | Path | Status | Why |
 |---|---|---|
 | `contracts/script/bastion/SmokeSwapLocal.s.sol` | **added** | Milestone 1 increment 3 local-anvil smoke test. Calls only — no upstream file changed. |
+| `contracts/src/bastion/pmm/PMMMath.sol` | **added** | Milestone 2 increments 1-2. Our 0.8.30 port of DODO's PMM (Apache-2.0 derivative work, attribution in the file header). Both directions, all three entry states, `adjustedTarget` and `getMidPrice`. A library of `internal` functions: it adds no deployable bytecode and no Hardhat test, so `make test` stays at 882. |
+| `contracts/src/bastion/pmm/Scale.sol` | **added** | Milestone 2 increment 2. Bastion's own (not DODO's): the pinned decimal normalisation behind spec 5.2's `priceWad`. Not in the pricing path — the contract consumes an already-normalised `i`. |
+| `contracts/src/bastion/pmm/PMMState.sol` | **added** | Milestone 2 increment 3. Bastion's own transition policy over DODO's pricing: initialisation, gross-input fee reinvestment, explicit recentring. Not a port of any DODO pool — only `PMMPricing`/`DODOMath` are vendored, so no claim is made about how DODO sequences these steps. |
+| `contracts/src/libs/OpcodeList.sol` | **MODIFIED** | Milestone 3 increment 1, ladder decision D3a. The FIRST upstream file Bastion modifies. Five previously free enum slots are given names: `0x33 MakerPriceAnchor`, `0x34 MakerBudget`, `0x35 BookMandate`, `0x52 PortfolioSwap`, `0x92 PortfolioLedger`. No existing entry is renamed, reordered or removed, so every upstream opcode keeps its value — upstream's own `OpcodeEnumCheck.t.sol` passes unchanged and `test/bastion/PortfolioSwap.t.sol` pins the five new ones. Naming is required because `InstructionBuilder.pushHeader` takes the `Opcode` enum type. |
+| `contracts/src/bastion/desk/DeskStorage.sol` | **added** | M3/i1. The ERC-7201 namespaced slot holding risk groups and book admission — the shared state itself. |
+| `contracts/src/bastion/desk/DeskAdmin.sol` | **added** | M3/i1. A DEPLOYED library holding the bodies of the maker-administration calls. Delegatecalled, so it runs in the router's storage context. It exists because of gate D1; see below. |
+| `contracts/src/bastion/desk/BastionDesk.sol` | **added** | M3/i1. Thin admin entrypoints and views on the router. |
+| `contracts/src/bastion/instructions/PortfolioLedger.sol` | **added** | M3/i1. Wrapper opcode `0x92`: admits the book, then commits the shared PMM state with the GROSS input. |
+| `contracts/src/bastion/instructions/PortfolioSwap.sol` | **added** | M3/i1. Leaf opcode `0x52`: prices one exact-in fill from the shared state. |
+| `contracts/src/bastion/instructions/MakerPriceAnchor.sol` | **added** | M3/i1. Leaf opcode `0x33`: refuses to trade without a live signed anchor. |
+| `contracts/src/bastion/opcodes/BastionOpcodes.sol` | **added** | M3/i1. Overrides `AquaOpcodes._runOpcode` (already `internal virtual`) and falls through to `super`, so `AquaOpcodes.sol` needs no edit. |
+| `contracts/src/bastion/routers/BastionAquaSwapVMRouter.sol` | **added** | M3/i1. The only router Bastion books ship to. |
+| `contracts/test/bastion/*` | **added** | M3/i1-i2. 31 Hardhat-runnable tests. `make test` is 882 + 31 = 913. |
+| `contracts/script/bastion/BastionSmokeLocal.s.sol` | **added** | M3/i2 local-anvil demonstration. Calls only — deploys are done by `scripts/anvil-bastion.sh` because `forge create` works where `forge script` silently drops this router family's broadcast. |
 
-The curve-comparison experiment lives in `experiments/curves/`, its own Foundry project,
-**not** in `contracts/test/`. A test in `contracts/` that loads a cross-project artifact
-via `vm.getCode` fails under Hardhat's resolver and turns `make test` red (882 passing +
-1 failing). Keeping it outside also keeps this table to one line.
+`make check-upstream` reports the additions as `Only in <ours>/{script,src,test}: bastion`
+and prints `OpcodeList.sol` as differing. That one differing line is the whole of Bastion's
+modification to upstream source. `SwapVM.sol`, `AquaOpcodes.sol`, `AquaSwapVMRouter.sol` and
+every upstream instruction remain byte-identical to the pin.
+
+### Gate D1: why two Bastion libraries are deployed separately
+
+EIP-170 caps runtime bytecode at 24,576 bytes. Measured at milestone 3 increment 1, exactly
+where the plan required it:
+
+| Router composition | Runtime (B) | Margin |
+|---|---|---|
+| upstream `AquaSwapVMRouter` | 20,376 | +4,200 |
+| + Bastion instructions, PMM math inlined | 23,526 | +1,050 |
+| + maker administration inlined | **26,842** | **-2,266 (undeployable)** |
+| admin moved to the deployed `DeskAdmin` library | 24,883 | -307 |
+| PMM math also deployed (`PMMMath` linked) | **23,404** | **+1,172** |
+
+Both moves keep state where ladder decision D2 put it: an `external` library function is
+reached by DELEGATECALL, so `DeskStorage.layout()` still resolves to the router's own slot.
+Only code moves. The costs are one delegatecall per administrative call, and one per PMM
+math call on the pricing path. `PMMMath.adjustedTarget` had to change from mutating its
+memory argument to returning the new targets, because a callee's memory changes do not
+survive a delegatecall; the arithmetic is untouched and milestone 2's 60 conformance tests
+still pass against the 0.6.9 reference.
+
+Deployment therefore requires linking: `PMMMath` and `DeskAdmin` must be deployed before
+`BastionAquaSwapVMRouter`.
+
+Two Bastion test/experiment projects live **outside** `contracts/`, each its own Foundry
+project: `experiments/curves/` (the curve premise check) and `conformance/` (gate P1, the
+PMM differential test). A test inside `contracts/` that loads a cross-project artifact via
+`vm.getCode` fails under Hardhat's resolver and turns `make test` red (882 passing +
+1 failing). Keeping both outside also keeps this table to two lines.
 
 ### Gotcha: Foundry edits upstream's `.gitignore`
 
@@ -62,8 +106,12 @@ Running `forge script --broadcast` appends `broadcast/` to `contracts/.gitignore
 silently un-tracks the 43 upstream deployment records **and** our own smoke-test evidence.
 `make check-upstream` catches it; revert the file to the pin when it does.
 
-No upstream file has been **modified** yet. `AquaOpcodes.sol` and every instruction are
-still byte-identical to the pin; `make check-upstream` proves it and prints anything new.
+One upstream file is now **modified**: `libs/OpcodeList.sol`, and only to name free enum
+slots (see the table above). `AquaOpcodes.sol`, `SwapVM.sol` and every instruction are still
+byte-identical to the pin; `make check-upstream` proves it and prints anything new.
+Both `aqua/` and `reference/dodo/lib/` are still byte-identical to their pins as of the
+milestone 2 increment 1 run — the DODO check matters most, since a modified reference
+would silently invalidate gate P1.
 
 ### Known forge issue this repo works around
 
@@ -103,5 +151,7 @@ The DODO reference is deliberately a **separate Foundry project**. Two reasons:
    `contracts/test/` would break `npx hardhat test solidity`, our authoritative regression command.
 2. Keeping it out of `contracts/` keeps the fork diff minimal, which is the point of this file.
 
-Milestone 2 will bridge the two with `vm.getCode()` against `reference/dodo/out/`, so the
-differential test runs in one process without either tree being modified.
+Milestone 2 increment 1 bridged the two: `conformance/test/PMMConformance.t.sol` loads
+`reference/dodo/out/PMMHarness.sol/PMMHarness.json` with `vm.getCode()` and drives it and
+the 0.8.30 port through one identical ABI, so the differential test runs in a single
+process with neither tree modified.

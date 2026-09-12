@@ -1,0 +1,189 @@
+# Bastion gate P3 + P4(preliminary) — milestone 2 increment 3 evidence
+# Command: make conformance
+# Date: 2026-09-10T05:39:35Z
+# forge: forge Version: 1.0.0-stable
+# adapter: contracts/src/bastion/pmm/PMMState.sol (solc 0.8.30, optimizer 700, via-IR)
+# reference: reference/dodo/lib/* at pin 2f1bcdac, solc 0.6.9, via vm.getCode
+
+forge build --root reference/dodo
+No files changed, compilation skipped
+forge test --root conformance -vv
+No files changed, compilation skipped
+
+Ran 20 tests for test/PMMStateAdapter.t.sol:PMMStateAdapterTest
+[PASS] testFuzz_FillSequence_StaysCanonical(uint256,uint256,uint256,uint256,uint256,uint256) (runs: 1049, μ: 167385, ~: 164760)
+[PASS] testFuzz_Fill_LeavesCanonicalState(uint256,uint256,uint256,uint256,uint256,bool) (runs: 1047, μ: 76565, ~: 77000)
+[PASS] testFuzz_Init_IsCanonical(uint256,uint256,uint256) (runs: 1049, μ: 30189, ~: 30143)
+[PASS] testFuzz_P4_SplitNeverPaysMore(uint256,uint256,uint256,uint256) (runs: 1038, μ: 115491, ~: 115943)
+[PASS] testFuzz_QuoteEqualsFill(uint256,uint256,uint256,uint256,bool) (runs: 1046, μ: 72295, ~: 72183)
+[PASS] testFuzz_Quote_DoesNotMutateState(uint256,uint256,uint256,uint256,bool) (runs: 1046, μ: 40746, ~: 40769)
+[PASS] testFuzz_Recentre_DoesNotTouchInventory(uint256,uint256,uint256,uint256,uint256) (runs: 1049, μ: 70435, ~: 71677)
+[PASS] testFuzz_Recentre_LeavesCanonicalState(uint256,uint256,uint256,uint256,uint256) (runs: 1049, μ: 89055, ~: 89862)
+[PASS] test_FeeReinvestment_EnlargesTheTarget() (gas: 110952)
+Logs:
+  B0 after fill, no fee:    9999999999999999958
+  B0 after fill, 9e18 fee:  10002935665443767101
+  target enlarged by:       2935665443767143
+
+[PASS] test_GasPerTransition() (gas: 104466)
+Logs:
+  gas quoteExactIn (ONE):      16884
+  gas applyExactIn (ONE):      29505
+  gas applyExactIn (ABOVE):    29513
+  gas recentre     (ABOVE):    15145
+
+[PASS] test_GrossCredit_ReclassifiesR() (gas: 81959)
+Logs:
+  curve R on net input:       0
+  adapter R after gross:      2
+  base held over old target:  1000000000000000
+
+[PASS] test_Init_IsCanonicalAndAtTarget() (gas: 25146)
+[PASS] test_Init_Rejects() (gas: 17236)
+[PASS] test_Init_RejectsTheAmplificationBand() (gas: 31908)
+[PASS] test_P4_AtDustScale_RoundingCanFavourTheSplitter() (gas: 94722)
+Logs:
+  P4 dust scale: single 49563587074 split 49562622215
+    outputs are a few thousand wei; rounding, not the curve, decides
+
+[PASS] test_P4_SplitNeverPaysMore_Preliminary() (gas: 543461)
+Logs:
+    slices: 1
+      total base out: 986209759016173081
+      shortfall vs single (wei): 0
+      final B0: 10002935665443767101
+    slices: 2
+      total base out: 986193149574801712
+      shortfall vs single (wei): 16609441371369
+      final B0: 10002952294456953688
+    slices: 4
+      total base out: 986184986622033842
+      shortfall vs single (wei): 24772394139239
+      final B0: 10002960467028550342
+    slices: 8
+      total base out: 986180940605146915
+      shortfall vs single (wei): 28818411026166
+      final B0: 10002964517813061592
+  P4 preliminary: 3,000 quote in at 30 bps on one 10e18/30,000e18 state.
+
+[PASS] test_P4_WithoutFee_GapIsRoundingOnly() (gas: 101466)
+Logs:
+  P4 control, no fee: single 989141968170617183 split 989141968170617175
+    fee-free gap (wei): 8
+
+[PASS] test_Quote_RepeatedIsStable() (gas: 97540)
+[PASS] test_Recentre_IsExplicitAndIdempotent() (gas: 86697)
+Logs:
+  B0 before recentre: 10002935665443767101
+  B0 after  recentre: 9913892869667678733
+
+[PASS] test_Recentre_RejectsZeroAnchor() (gas: 12991)
+Suite result: ok. 20 passed; 0 failed; 0 skipped; finished in 1.15s (4.60s CPU time)
+
+Ran 40 tests for test/PMMConformance.t.sol:PMMConformanceTest
+[PASS] testFuzz_AdjustTarget_AllStates(uint256,uint256,uint256,uint256) (runs: 1041, μ: 135194, ~: 143402)
+[PASS] testFuzz_CanonicalAbove(uint256,uint256,uint256,uint256,uint256) (runs: 1041, μ: 146741, ~: 156604)
+[PASS] testFuzz_CanonicalBelow(uint256,uint256,uint256,uint256,uint256) (runs: 1045, μ: 143847, ~: 136966)
+[PASS] testFuzz_CrossingBoundary(uint256,uint256,uint256,uint256) (runs: 1039, μ: 101896, ~: 104968)
+[PASS] testFuzz_MidPrice_AllStates(uint256,uint256,uint256,uint256) (runs: 1041, μ: 100488, ~: 106714)
+[PASS] testFuzz_P2_KZero_IsExactlyFloored(uint256,uint256,uint256) (runs: 1049, μ: 22550, ~: 22322)
+[PASS] testFuzz_P2_Monotonic(uint256,uint256,uint256,uint256,uint256) (runs: 1042, μ: 93764, ~: 96732)
+[PASS] testFuzz_P2_OutputBoundedByReserve(uint256,uint256,uint256,uint256) (runs: 1041, μ: 54505, ~: 55869)
+[PASS] testFuzz_P2_SellBase_DeviationInSafeBand(uint256,uint256,uint256,uint256) (runs: 1049, μ: 55508, ~: 55769)
+[PASS] testFuzz_P2_SellQuote_DeviationInSafeBand(uint256,uint256,uint256,uint256) (runs: 1048, μ: 49643, ~: 49425)
+[PASS] testFuzz_Scale_RoundTripNeverRoundsUp(uint256,uint8,uint8) (runs: 1049, μ: 15296, ~: 15328)
+[PASS] testFuzz_SellBase_ROne(uint256,uint256,uint256,uint256) (runs: 1049, μ: 56076, ~: 58165)
+[PASS] testFuzz_SellBase_ROne_KOne(uint256,uint256,uint256) (runs: 1049, μ: 27208, ~: 27183)
+[PASS] testFuzz_SellBase_ROne_KZero(uint256,uint256,uint256) (runs: 1049, μ: 25415, ~: 25438)
+[PASS] testFuzz_SellQuote_ROne(uint256,uint256,uint256,uint256) (runs: 1049, μ: 52171, ~: 52867)
+[PASS] testFuzz_SellQuote_ROne_KOne(uint256,uint256,uint256) (runs: 1049, μ: 27652, ~: 27612)
+[PASS] testFuzz_SellQuote_ROne_KZero(uint256,uint256,uint256) (runs: 1049, μ: 26449, ~: 26483)
+[PASS] testFuzz_SyntheticAbove(uint256,uint256,uint256,uint256,uint256,uint256) (runs: 1049, μ: 115315, ~: 127846)
+[PASS] testFuzz_SyntheticBelow(uint256,uint256,uint256,uint256,uint256,uint256) (runs: 1049, μ: 116934, ~: 127810)
+[PASS] testFuzz_TradeSequence(uint256,uint256,uint256,uint256,uint256,uint256) (runs: 1041, μ: 272741, ~: 275878)
+[PASS] test_AdjustTarget_NoOpAtOne() (gas: 20490)
+[PASS] test_CornerCaseClamp() (gas: 28787)
+Logs:
+  clamped output (spare quote was 1 wei): 1
+
+[PASS] test_Crossing_SellBase_FromAbove() (gas: 121463)
+Logs:
+  Bound result 1000000000000000000000
+  sellBase from ABOVE_ONE, backToOnePayBase = 332191901292505845
+    one wei short -> out 999999999999998996770 R 1
+    exactly       -> out 1000000000000000000000 R 0
+    one wei over  -> out 1000000000000000003000 R 2
+
+[PASS] test_Crossing_SellQuote_FromBelow() (gas: 114427)
+Logs:
+  Bound result 3000000000000000000
+
+[PASS] test_DustPay() (gas: 75175)
+[PASS] test_GasPerCall() (gas: 112235)
+Logs:
+  Bound result 1000000000000000000000
+  gas sellQuote   (ABOVE_ONE, k=0.1): 20083
+  gas sellBase    (ABOVE_ONE, k=0.1): 17670
+  gas adjustTarget(ABOVE_ONE, k=0.1): 13696
+  gas midPrice    (ABOVE_ONE, k=0.1): 2092
+  gas sellQuote   (ONE, k=0.1):       15333
+
+[PASS] test_KZeroAndKOne_Fixed() (gas: 42612)
+[PASS] test_MidPrice_AtTargetEqualsAnchor() (gas: 21684)
+[PASS] test_OutsideDomain_BothRevert_ButRevertDataDiffers() (gas: 19737)
+Logs:
+  reference revert data:
+  0x08c379a0000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000094d554c5f4552524f520000000000000000000000000000000000000000000000
+  port revert data (Panic 0x11):
+  0x4e487b710000000000000000000000000000000000000000000000000000000000000011
+
+[PASS] test_P2_DeviationShrinksAwayFromKOne() (gas: 390522)
+Logs:
+    1-k = 1 deviation (wei) = 227272500000000000
+    1-k = 100 deviation (wei) = 2272725000000000
+    1-k = 100000 deviation (wei) = 2727250000000
+    1-k = 1000000000 deviation (wei) = 378286500
+    1-k = 1000000000000 deviation (wei) = 201512
+
+[PASS] test_P2_MeasuredDeviationInSafeBand() (gas: 446289)
+Logs:
+  P2 in-band, 256 deterministic samples, sellQuote:
+    worst overshoot (wei)             1
+    worst overshoot, relative x 1e18  0
+    worst undershoot (wei)            0
+
+[PASS] test_P2_NeverBetterThanAnchorAtTarget() (gas: 38300)
+[PASS] test_P2_NotMakerFavouring_TheViolation() (gas: 81050)
+Logs:
+  P2 violation, 1-k = 3 wei on a 1e12-wei book:
+    output returned by BOTH implementations: 196952839617351912
+    high-precision (1e6x) answer:            47574339617351912
+    overshoot, x1000 relative:               3139
+
+[PASS] test_P2_ZeroInZeroOut() (gas: 29040)
+[PASS] test_PayFarAboveTarget() (gas: 79170)
+[PASS] test_ReferenceRefusal_BothRevertIdentically() (gas: 37131)
+[PASS] test_Scale_OtherPairs() (gas: 9247)
+[PASS] test_Scale_Reverts() (gas: 11275)
+[PASS] test_Scale_WethUsdc() (gas: 90752)
+Logs:
+  fWETH/fUSDC anchor i = 3000000000 for human price 3000000000000000000000
+
+[PASS] test_WorkedExample_ROneSellQuote() (gas: 49916)
+Logs:
+  i   (quote per base, wad)  3000000000000000000000
+  k   (flatness, wad)        100000000000000000
+  B0 = B (base)              10000000000000000000
+  Q0 = Q (quote)             30000000000000000000000
+  gross in  (quote)          3000000000000000000000
+  fee 30bps (quote)          9000000000000000000
+  curve in  (quote)          2991000000000000000000
+  reference out (base)       986209759016173081
+  port      out (base)       986209759016173081
+  reference next R           1
+  port      next R           1
+  effective price, quote per base (wad) 3032823365065636003362
+
+Suite result: ok. 40 passed; 0 failed; 0 skipped; finished in 1.84s (9.07s CPU time)
+
+Ran 2 test suites in 1.84s (2.99s CPU time): 60 tests passed, 0 failed, 0 skipped (60 total tests)
